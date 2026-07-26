@@ -1012,6 +1012,11 @@ dependencies = [
     { name = "sphinx" },
 ]
 
+[package.optional-dependencies]
+docs = [
+    { name = "furo" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "bs4" },
@@ -1034,8 +1039,10 @@ types = [
 [package.metadata]
 requires-dist = [
     { name = "docutils", specifier = ">=0.21.2" },
+    { name = "furo", marker = "extra == 'docs'", specifier = ">=2024.1.29" },
     { name = "sphinx", specifier = "~=7.0" },
 ]
+provides-extras = ["docs"]
 
 [package.metadata.requires-dev]
 dev = [

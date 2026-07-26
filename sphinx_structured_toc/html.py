@@ -2,11 +2,12 @@
 
 Renders the annotated doctree as semantic HTML:
 
-* ``Domain`` becomes ``<nav aria-labelledby="...">`` (when the domain name
-  is derived from a section heading) or ``<nav aria-label="...">`` plus a
-  visually-hidden ``<span id="...">`` (when the domain name is
-  overridden). The nameless case (no argument and no enclosing section)
-  is a fatal build error, raised in ``transforms.py`` before rendering.
+* ``Domain`` becomes ``<nav aria-labelledby="...">`` referencing either the
+  enclosing section's heading id (when the domain name is derived from a
+  section heading) or a visually-hidden ``<span id="..." class="domain-
+  aria-target">`` holding the name (when the domain name is overridden).
+  The nameless case (no argument and no enclosing section) is a fatal
+  build error, raised in ``transforms.py`` before rendering.
 * ``Slice`` becomes a ``<li>`` containing the slice label ``<span>`` plus
   ``": "`` and a nested ``<ul>`` of items.
 * ``SliceItem`` becomes a ``<li>`` containing the resolved ``<a>``.
@@ -32,28 +33,29 @@ def visit_domain(translator: Any, node: Any) -> None:
 
     Emits ``<nav aria-labelledby="{section_id}">`` when the domain name
     is derived from a section heading (not overridden), or
-    ``<nav aria-label="{name}">`` plus a visually-hidden
-    ``<span id="{domain_span_id}">{name}</span>`` when overridden. The
-    nameless case (no argument and no enclosing section) is a fatal
-    build error raised in ``transforms.py`` and never reaches the
-    visitor.
+    ``<nav aria-labelledby="{domain_span_id}">`` referencing a
+    visually-hidden ``<span id="{domain_span_id}" class="domain-aria-
+    target">{name}</span>`` when overridden. The nameless case (no
+    argument and no enclosing section) is a fatal build error raised in
+    ``transforms.py`` and never reaches the visitor.
     """
     overridden = bool(node.get("overridden", False))
     section_id = node.get("section_id", "")
     name = node.get("name", "")
 
     if overridden:
-        # aria-label on the nav; a visually-hidden span inside carries the
-        # id that aria-labelledby on marked items will reference.
-        translator.body.append(
-            f'<nav class="domain-list" aria-label="{translator.attval(name)}">'
-        )
+        # aria-labelledby on the nav points at a visually-hidden span
+        # inside, which is the single source of truth for the name and
+        # is also referenced by aria-labelledby on marked items.
         span_id = node.get("domain_span_id", "")
-        # Visually-hidden via the "visually-hidden" class (furo/alabaster
-        # convention) plus our own class as a fallback hook.
         translator.body.append(
-            f'<span id="{span_id}" class="visually-hidden '
-            f'domain-list-aria-target">{translator.attval(name)}</span>'
+            f'<nav class="domain-list" aria-labelledby="{span_id}">'
+        )
+        # "domain-aria-target" visually hides the span while keeping it
+        # in the accessibility tree (styles in domain-list.css).
+        translator.body.append(
+            f'<span id="{span_id}" class="domain-aria-target">'
+            f'{translator.attval(name)}</span>'
         )
     else:
         translator.body.append(

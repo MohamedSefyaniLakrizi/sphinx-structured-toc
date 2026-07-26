@@ -1,32 +1,27 @@
 Reference
 =============
 
-Rendering
----------
+Basic rendering
+---------------
 
-When ``.. domain::`` is given without an argument, the domain label is taken from the nearest enclosing section heading (the ``<nav>`` is labelled via an ``aria-labelledby`` attribute that refers to the heading's id).
-
-When the argument *is* supplied, it overrides the heading-derived name:
+When ``.. domain::`` is given without an argument, the domain label is taken from the nearest enclosing section heading (the ``<nav>`` is labelled via an ``aria-labelledby`` attribute that refers to the heading's ``id``).
 
 ..  code-block:: rst
 
     The model layer
     ---------------
 
-    ..  domain:: Model layer
+    ..  domain::
 
         ..  slice:: Models
 
             :doc:`Reference <models/reference>`
 
-In this case ``aria-label="Model layer"`` is applied to the ``<nav>`` and a visually-hidden ``<span>`` inside the ``<nav>`` provides an ``aria-labelledby`` target.
-
 The example above renders as:
 
 ..  code-block:: html
 
-    <nav aria-label="Model layer">
-      <span id="the-model-layer-domain" class="visually-hidden">Model layer</span>
+     <nav aria-labelledby="the-model-layer">
       <ul>
         <li>
           <span id="the-model-layer-models" class="domain-list-label">Models</span>:
@@ -41,13 +36,31 @@ The example above renders as:
       </ul>
     </nav>
 
-The ``id``\s are automatically generated as required, whether derived from headings or explicit names.
+The ``id``\s are automatically generated as required.
 
-Without the explicit domain label, the block would start:
+
+Explicitly named domains
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+When domain *is* supplied with an argument, it overrides the heading-derived name:
+
+..  code-block:: rst
+
+    The model layer
+    ---------------
+
+    ..  domain:: Model layer
+
+        ..  slice:: Models
+
+            :doc:`Reference <models/reference>`
+
 
 ..  code-block:: html
 
-    <nav aria-labelledby="the-model-layer">
+    <nav aria-labelledby="model-layer-domain">
+      <span id="model-layer-domain" class="domain-aria-target">Model layer</span>
+      [...]
 
 
 The ``domain`` directive

@@ -10,6 +10,8 @@ Note that this is *independent* of Sphinx's ``toctree``\s. A ``toctree`` builds 
 The *domains of concern* pattern
 --------------------------------
 
+.. _first-example:
+
 Example
 ~~~~~~~
 
@@ -20,7 +22,7 @@ Below is a fragment of a table of contents.
 The model layer
 ...............
 
-..  domain:: Model layer
+..  domain::
     :suppress-warnings:
 
     ..  slice:: Models
@@ -38,7 +40,7 @@ The model layer
 The view layer
 ..............
 
-..  domain:: View layer
+..  domain::
     :suppress-warnings:
 
     ..  slice:: Basics
@@ -74,7 +76,7 @@ Specifically, an entire domain can be given an accessible label, so that the ``<
 
 The example below is the same as the one above, with the addition of some *domain* and *slice* keywords to make the ambiguous links explicit.
 
-There are two domains, *Model layer* and *View layer* (named explicitly, though a domain can also get its label automatically from the heading that precedes it).
+There are two domains, *Model layer* and *View layer* (named explicitly, though a domain can also get its label automatically from the heading that precedes it, as they do in the :ref:`first example on this page <first-example>`).
 
 *Reference* appears three times. The ``slice`` keyword on the first two disambiguates them with their slice names. Their accessible names become "Reference, Models" and "Reference, Queries".
 

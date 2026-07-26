@@ -46,7 +46,7 @@ def test_nav_aria_labelledby_when_domain_from_heading(build_app):
     assert "aria-label" not in nav.attrs
 
 
-def test_nav_aria_label_and_hidden_span_when_domain_overridden(build_app):
+def test_nav_aria_labelledby_and_hidden_span_when_domain_overridden(build_app):
     app = build_app(
         dedent("""
             The model layer
@@ -61,15 +61,15 @@ def test_nav_aria_label_and_hidden_span_when_domain_overridden(build_app):
         docs=_DOCS,
     )
     nav = get_nav(app)
-    assert nav.get("aria-label") == "Override name"
-    assert "aria-labelledby" not in nav.attrs
     span = nav.find("span", id="override-name-domain")
     assert span is not None
+    assert nav.get("aria-labelledby") == span["id"]
+    assert "aria-label" not in nav.attrs
     assert span.get_text() == "Override name"
-    assert span.get("class") is not None
+    assert span.get("class") == ["domain-aria-target"]
 
 
-def test_nav_aria_label_when_overridden_and_no_section(build_app):
+def test_nav_aria_labelledby_when_overridden_and_no_section(build_app):
     app = build_app(
         dedent("""
             .. domain:: Override name
@@ -81,9 +81,10 @@ def test_nav_aria_label_when_overridden_and_no_section(build_app):
         docs=_DOCS,
     )
     nav = get_nav(app)
-    assert nav.get("aria-label") == "Override name"
     span = nav.find("span", id="override-name-domain")
     assert span is not None
+    assert nav.get("aria-labelledby") == span["id"]
+    assert "aria-label" not in nav.attrs
     assert span.get_text() == "Override name"
 
 
