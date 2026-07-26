@@ -10,6 +10,11 @@ dependencies = [
 ]
 license = "GPL-3.0"
 
+[project.optional-dependencies]
+docs = [
+    "furo>=2024.1.29",
+]
+
 [dependency-groups]
 lint = [
     "mypy>=1.16.0",
