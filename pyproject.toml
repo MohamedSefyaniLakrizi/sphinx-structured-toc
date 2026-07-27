@@ -22,6 +22,11 @@ classifiers = [
 ]
 license = { file = "LICENSE" }
 
+[project.urls]
+Documentation = "https://canonical-sphinx-structured-toc.readthedocs-hosted.com/"
+Source = "https://github.com/canonical/sphinx-structured-toc"
+Issues = "https://github.com/canonical/sphinx-structured-toc/issues"
+
 [project.optional-dependencies]
 docs = [
     "furo>=2024.1.29",
