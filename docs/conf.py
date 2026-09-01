@@ -24,11 +24,13 @@ import textwrap
 #######################
 
 # Project name
-# TODO: Update with the official name of your project or product (e.g., "Ubuntu Server")
-project = "sphinx-structured-toc"
+project = "Sphinx Structured Toc"
 
 # Author name; used in the default copyright statement in the page footer
-author = "sphinx-structured-toc contributors"
+author = "Canonical Ltd."
+
+github_repo = "https://github.com/canonical/sphinx-structured-toc"
+source_branch = os.environ.get("READTHEDOCS_GIT_IDENTIFIER", "main")
 
 # The year in the copyright statement
 copyright = f"{datetime.date.today().year}"
@@ -36,47 +38,46 @@ copyright = f"{datetime.date.today().year}"
 # Sidebar documentation title
 # To disable the title, set it to an empty string.
 html_title = project + " documentation"
+html_theme = "ulwazi"
 
 # Documentation website URL
 ogp_site_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 
 # Preview name of the documentation website
-# TODO: To use a different name for the project in previews, update the next line.
 ogp_site_name = project
 
 # Preview image URL
-# TODO: To customise the preview image, update the next line.
 ogp_image = "https://assets.ubuntu.com/v1/cc828679-docs_illustration.svg"
 
 # Product favicon; shown in bookmarks, browser tabs, etc.
-# TODO: To customise the favicon, uncomment and update the next line.
-# html_favicon = "_static/favicon.png"
+html_favicon = "_static/favicon.png"
 
 # Dictionary of values to pass into the Sphinx context for all pages:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
 html_context = {
     # Product page URL; can be different from product docs URL
-    # TODO: Change to your product website URL, dropping the 'https://' prefix (e.g.,
-    #       'ubuntu.com/lxd'). If there's no such website, remove the {{ product_page }}
-    #       link from the _templates/header.html file.
-    "product_page": "",
+    "product_page": "docs.ubuntu.com",
+    "project": "Ubuntu Documentation",
     # Product tag image; the orange part of your logo, shown in the page header
-    # TODO: To add a tag image, uncomment and update as needed.
-    # 'product_tag': '_static/tag.png',
+    "license": {
+        "name": "LGPL-3.0-only",
+        "url": github_repo + "/blob/" + source_branch + "/LICENSE",
+    },
+    # "product_tag": "_static/tag.png",
     # Your Discourse instance URL
     # TODO: Change to your Discourse instance URL or leave empty.
-    "discourse": "",
+    "discourse": "https://discourse.canonical.com/",
     # Your Mattermost channel URL
     # TODO: Change to your Mattermost channel URL or leave empty.
-    "mattermost": "",
+    "mattermost": "https://chat.canonical.com/canonical/channels/documentation",
     # Your Matrix channel URL
     # TODO: Change to your Matrix channel URL or leave empty.
-    "matrix": "",
+    "matrix": "https://matrix.to/#/#documentation:ubuntu.com",
     # Your documentation GitHub repository URL If set, links for viewing the
     # documentation source files and creating GitHub issues are added at the bottom of
     # each page.
     # TODO: Change to your documentation GitHub repository URL or leave empty.
-    "github_url": "",
+    "github_url": "github_repo",
     # Docs branch in the repo; used in links for viewing the source files
     "repo_default_branch": "main",
     # Docs location in the repo; used in links for viewing the source files
@@ -84,12 +85,28 @@ html_context = {
     # TODO: To enable or disable the Previous / Next buttons at the bottom of pages
     # Valid options: none, prev, next, both
     # "sequential_nav": "",
-    # TODO: To enable listing contributors on individual pages, set to True
     "display_contributors": False,
     # Required for feedback button
     "github_issues": "enabled",
     # Passes the top-level 'author' value to the theme
     "author": author,
+    # Canonical Product menu
+    # Uncomment if you need a product menu added on the top of every page
+    "add_product_menu": True,
+    "logo_link_URL": "/",
+    "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
+    "logo_title": "Sphinx Structured Toc",
+    # TODO: Customize the footer.
+    "footer": {
+        # Whether to add the product name as the first entry.
+        "product": True,
+        # Whether to add the license as the second entry.
+        "license": True,
+        # List your footer entries. Accepts HTML tags.
+        "entries": [
+            '<a href="#tracker-settings" class="js-revoke-cookie-manager muted-link">Manage your tracker settings</a>',
+        ],
+    },
     # Documentation license information
     "license": {
         # TODO: Specify your project's license.
@@ -143,8 +160,8 @@ sitemap_excludes = [
 # Template and asset locations #
 ################################
 
-# html_static_path = ["_static"]
-# templates_path = ["_templates"]
+html_static_path = ["_static"]
+templates_path = ["_templates"]
 
 #############
 # Redirects #
@@ -220,7 +237,7 @@ linkcheck_retries = 3
 # Custom Sphinx extensions; see
 # https://www.sphinx-doc.org/en/master/usage/extensions/index.html
 extensions = [
-    "canonical_sphinx",
+    "ulwazi",
     "notfound.extension",
     "sphinx_design",
     "sphinx_rerediraffe",
