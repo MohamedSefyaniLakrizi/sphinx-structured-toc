@@ -27,14 +27,32 @@ except ImportError:  # pragma: no cover
     except PackageNotFoundError:
         __version__ = "dev"
 
+def visit_transparent(translator: object, node: object) -> None:
+    """Render structured TOC nodes transparently for LaTeX output."""
+
+
+def depart_transparent(translator: object, node: object) -> None:
+    """Finish rendering a transparent structured TOC node."""
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     # register various components
 
     # nodes
-    app.add_node(Domain, html=(visit_domain, depart_domain))
-    app.add_node(Slice, html=(visit_slice, depart_slice))
-    app.add_node(SliceItem, html=(visit_slice_item, depart_slice_item))
+    app.add_node(
+        Domain,
+        html=(visit_domain, depart_domain),
+        latex=(visit_transparent, depart_transparent),
+    )
+    app.add_node(
+        Slice,
+        html=(visit_slice, depart_slice),
+        latex=(visit_transparent, depart_transparent),
+    )
+    app.add_node(
+        SliceItem,
+        html=(visit_slice_item, depart_slice_item),
+        latex=(visit_transparent, depart_transparent),
+    )
 
     # directives
     app.add_directive("domain", DomainDirective)
