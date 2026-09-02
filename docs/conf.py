@@ -40,8 +40,10 @@ copyright = f"{datetime.date.today().year}"
 html_title = project + " documentation"
 html_theme = "ulwazi"
 
+html_css_files = ["https://assets.ubuntu.com/v1/d86746ef-cookie_banner.css"]
+
 # Documentation website URL
-ogp_site_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
+ogp_site_url = f"https://canonical.com/example/docs/{os.environ.get('READTHEDOCS_VERSION', 'local')}/"
 
 # Preview name of the documentation website
 ogp_site_name = project
@@ -51,6 +53,10 @@ ogp_image = "https://assets.ubuntu.com/v1/cc828679-docs_illustration.svg"
 
 # Product favicon; shown in bookmarks, browser tabs, etc.
 html_favicon = "_static/favicon.png"
+
+slug = "documentation/docs"
+
+html_static_path = ["_static"]
 
 # Dictionary of values to pass into the Sphinx context for all pages:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
@@ -139,10 +145,11 @@ html_context = {
 #######################
 
 # Use RTD canonical URL to ensure duplicate pages have a specific canonical URL
-html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
+html_baseurl = f"https://canonical.com/example/docs/{os.environ.get('READTHEDOCS_VERSION', 'local')}/"
 
 # sphinx-sitemap uses html_baseurl to generate the full URL for each page:
 sitemap_url_scheme = "{link}"
+sitemap_filename = "doc-sitemap.xml"
 
 # Include `lastmod` dates in the sitemap:
 sitemap_show_lastmod = True
@@ -274,9 +281,11 @@ exclude_patterns = [
 # ]
 
 # Adds custom JavaScript files, located remotely or in 'html_static_path'.
-# html_js_files = [
-#     "https://assets.ubuntu.com/v1/287a5e8f-bundle.js",
-# ]
+html_js_files = [
+    #     "https://assets.ubuntu.com/v1/287a5e8f-bundle.js",
+    "js/overwrite_links.js",
+]
+
 
 # Appends extra markup to the end of every document written in reST
 # rst_epilog = """
