@@ -1,7 +1,7 @@
 // Replaces rtd-address with new-address in links
 
 const rtd_address = 'canonical-sphinx-structured-toc.readthedocs-hosted.com/';
-const new_address = 'ubuntu.com/documentation/docs/sphinx-structured-toc/';
+const new_address = 'ubuntu.com/docs/sphinx-structured-toc/';
 const new_path = '/' + new_address.split('/').slice(1).join('/');
 
 function escapeRegExp(value) {
