@@ -77,6 +77,7 @@ pymarkdownlnt-install: install
 	@. $(DOCS_VENV); test -d $(DOCS_VENVDIR)/lib/python*/site-packages/pymarkdown || pip install pymarkdownlnt==0.9.35
 
 install: $(DOCS_VENVDIR)
+	. $(DOCS_VENV); python -m pip install $(PIPOPTS) --require-virtualenv --upgrade ..
 
 run: install
 	. $(DOCS_VENV); $(DOCS_VENVDIR)/bin/sphinx-autobuild -b dirhtml --host $(SPHINX_HOST) --port $(SPHINX_PORT) "$(DOCS_SOURCEDIR)" "$(DOCS_BUILDDIR)" $(SPHINX_OPTS) $(SPHINX_AUTOBUILD_OPTS)

@@ -58,6 +58,8 @@ slug = "documentation/docs"
 
 html_static_path = ["_static"]
 
+localtoc_max_depth = -1
+
 # Dictionary of values to pass into the Sphinx context for all pages:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_context
 html_context = {
