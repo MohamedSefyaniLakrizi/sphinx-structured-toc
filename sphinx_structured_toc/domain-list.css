@@ -1,29 +1,31 @@
 .domain-list > ul > li > ul {
-    display: inline;
-    margin: 0;
-    padding: 0;
+  display: inline;
+  margin: 0;
+  padding: 0;
 }
 
 .domain-list > ul > li > ul > li {
-    display: inline;
-    padding-left: 0.3em;
-    border-left: 1px solid currentColor;
-    margin-left: 0.3em;
+  display: inline;
+  padding-left: 0.3em;
+  border-left: 1px solid currentColor;
+  margin-left: 0.3em;
 }
 
 .domain-list > ul > li > ul > li:first-child {
-    border-left: none;
-    margin-left: 0;
-    padding-left: 0;
+  border-left: none;
+  margin-left: 0;
+  padding-left: 0;
 }
 
-.domain-list-label {font-weight: bold;}
+.domain-list-label {
+  font-weight: bold;
+}
 
 .domain-aria-target {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
