@@ -72,7 +72,6 @@ class SliceDirective(SphinxDirective):
 
     def run(self) -> list[nodes.Node]:
         """Build a Slice node from the directive content."""
-
         name = self.arguments[0]
 
         slice_node = Slice()
@@ -138,8 +137,7 @@ class SliceDirective(SphinxDirective):
         return item
 
     def parse_line(self, line: str) -> tuple[str, bool, bool, str | None]:
-        """Parses a line into its components"""
-
+        """Parse a line into its components."""
         mark_slice = mark_domain = False
         text = line.rstrip()
         parts = text.split()

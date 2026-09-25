@@ -30,6 +30,7 @@ Issues = "https://github.com/canonical/sphinx-structured-toc/issues"
 [project.optional-dependencies]
 docs = [
     "furo>=2024.1.29",
+    "sphinxcontrib-svg2pdfconverter[CairoSVG]~=2.1",
 ]
 
 [dependency-groups]
@@ -49,6 +50,7 @@ dev = [
     "pytest-cov~=6.0",
     "pytest-mock~=3.12",
     "sphinx-autobuild>=2024.10.3",
+    "sphinxcontrib-svg2pdfconverter[CairoSVG]~=2.1",
     "twine>=6.2.0",
 ]
 
@@ -222,12 +224,18 @@ select = [
 ]
 ignore = [
     "E501",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
     "D105",
     "D107",
     "D203",
     "D213",
     "D215",
     "A003",
+    "A005",
     "SIM117",
     "COM812",
     "ISC001",
@@ -245,6 +253,7 @@ ignore-decorators = [
 
 [tool.ruff.lint.pylint]
 max-args = 8
+max-branches = 16
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**.py" = [
@@ -261,4 +270,7 @@ max-args = 8
 "__init__.py" = [
     "I001",
     "F401",
+]
+"docs/conf.py" = [
+    "INP001",
 ]

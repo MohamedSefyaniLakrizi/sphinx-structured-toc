@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from docutils import nodes
-
 from sphinx_structured_toc.nodes import Slice, SliceItem
 
 
