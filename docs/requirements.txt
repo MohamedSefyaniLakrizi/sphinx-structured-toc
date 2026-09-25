@@ -4,12 +4,7 @@ sphinx
 build
 canonical-sphinx-config @ git+https://github.com/Canonical/canonical-sphinx-config.git@main
 sphinx-basic-ng
-sphinxcontrib-jquery
 beautifulsoup4
-packaging
-sphinxcontrib-svg2pdfconverter[CairoSVG]
-sphinx-last-updated-by-git
-sphinx-sitemap
 sphinx-terminal
 
 # Extensions previously auto-loaded by canonical-sphinx

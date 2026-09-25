@@ -24,7 +24,7 @@ import textwrap
 #######################
 
 # Project name
-project = "Sphinx Structured Toc"
+project = "Sphinx structured table of contents"
 
 # Author name; used in the default copyright statement in the page footer
 author = "Canonical Ltd."
@@ -43,7 +43,7 @@ html_theme = "ulwazi"
 html_css_files = ["https://assets.ubuntu.com/v1/d86746ef-cookie_banner.css"]
 
 # Documentation website URL
-ogp_site_url = f"https://canonical.com/example/docs/{os.environ.get('READTHEDOCS_VERSION', 'local')}/"
+ogp_site_url = f"https://documentation.canonical.com/sphinx-structured-toc/{os.environ.get('READTHEDOCS_VERSION', 'local')}/"
 
 # Preview name of the documentation website
 ogp_site_name = project
@@ -56,8 +56,6 @@ html_favicon = "_static/favicon.png"
 
 slug = "documentation/docs"
 
-html_static_path = ["_static"]
-
 localtoc_max_depth = -1
 
 # Dictionary of values to pass into the Sphinx context for all pages:
@@ -65,7 +63,7 @@ localtoc_max_depth = -1
 html_context = {
     # Product page URL; can be different from product docs URL
     "product_page": "docs.ubuntu.com",
-    "project": "Ubuntu Documentation",
+    "project": "Sphinx structured table of contents",
     # Product tag image; the orange part of your logo, shown in the page header
     "license": {
         "name": "LGPL-3.0-only",
@@ -85,14 +83,14 @@ html_context = {
     # documentation source files and creating GitHub issues are added at the bottom of
     # each page.
     # TODO: Change to your documentation GitHub repository URL or leave empty.
-    "github_url": "github_repo",
+    "github_url": "https://github.com/canonical/sphinx-structured-toc",
     # Docs branch in the repo; used in links for viewing the source files
     "repo_default_branch": "main",
     # Docs location in the repo; used in links for viewing the source files
     "repo_folder": "/docs/",
     # TODO: To enable or disable the Previous / Next buttons at the bottom of pages
     # Valid options: none, prev, next, both
-    # "sequential_nav": "",
+    "sequential_nav": "none",
     "display_contributors": False,
     # Required for feedback button
     "github_issues": "enabled",
@@ -103,7 +101,7 @@ html_context = {
     "add_product_menu": True,
     "logo_link_URL": "/",
     "logo_img_URL": "https://assets.ubuntu.com/v1/82818827-CoF_white.svg",
-    "logo_title": "Sphinx Structured Toc",
+    "logo_title": "Sphinx Structured ToC",
     # TODO: Customize the footer.
     "footer": {
         # Whether to add the product name as the first entry.
@@ -147,7 +145,7 @@ html_context = {
 # ==============================================================================
 
 # Use RTD canonical URL to ensure duplicate pages have a specific canonical URL
-html_baseurl = "https://staging.ubuntu.com/docs/sphinx-structured-toc/"
+html_baseurl = "https://documentation.ubuntu.com//sphinx-structured-toc/"
 
 # URL scheme. Add language and version scheme elements.
 sitemap_url_scheme = "{link}"
@@ -197,8 +195,7 @@ rediraffe_dir_only = True
 # <first sentence of home page>".
 llms_txt_description = textwrap.dedent(
     """\
-    This is the documentation for the Sphinx Stack, a template repository that helps you
-    set up, build, and publish Sphinx documentation.
+    This is the documentation for the Sphinx structured table of contents. A sphinx extension.
     """
 )
 
