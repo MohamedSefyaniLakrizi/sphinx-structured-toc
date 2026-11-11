@@ -24,7 +24,8 @@ build:
         exit 183;
       fi
     post_build:
-    - npx --yes purgecss --css "$READTHEDOCS_OUTPUT/html/_static/css/vanilla-main.css" --content "$READTHEDOCS_OUTPUT/html/**/*.html" "$READTHEDOCS_OUTPUT/html/_static/**/*.js" --output "$READTHEDOCS_OUTPUT/html/_static/css/"
+    - npx --yes purgecss --css "$READTHEDOCS_OUTPUT/html/_static/css/*.css" --content "$READTHEDOCS_OUTPUT/html/**/*.html" "$READTHEDOCS_OUTPUT/html/_static/**/*.js" --output "$READTHEDOCS_OUTPUT/html/_static/css/"
+    - npx --yes lightningcss-cli --minify --output-dir "$READTHEDOCS_OUTPUT/html/_static/css/" "$READTHEDOCS_OUTPUT/html/_static/css/"*.cssTPUT/html/_static/**/*.js" --output "$READTHEDOCS_OUTPUT/html/_static/css/"
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
