@@ -6,7 +6,6 @@ from textwrap import dedent
 from docutils import nodes
 from docutils.core import publish_doctree
 from docutils.parsers.rst import directives as rst_directives
-
 from sphinx_structured_toc.directives import DomainDirective, SliceDirective
 from sphinx_structured_toc.nodes import Domain, Slice, SliceItem
 

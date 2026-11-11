@@ -31,7 +31,7 @@ def build_app(tmp_path: Path, make_app: Callable[..., Any]) -> Callable[..., Any
         # built doctree so error-detection tests can find them via
         # ``findall(nodes.system_message)``. Sphinx strips them by default.
         src.joinpath("conf.py").write_text(
-            "extensions = ['sphinx_structured_toc']\n" "keep_warnings = True\n",
+            "extensions = ['sphinx_structured_toc']\nkeep_warnings = True\n",
             encoding="utf-8",
         )
         src.joinpath("index.rst").write_text(rst, encoding="utf-8")

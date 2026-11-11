@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from docutils import nodes
+from sphinx.application import Sphinx
 from sphinx.util.logging import getLogger
 
 from .nodes import Domain, Slice, SliceItem
@@ -34,18 +35,14 @@ def section_id(section: nodes.section) -> str:
 
 def visible_text(item: SliceItem) -> str:
     """Return the visible text of a SliceItem's resolved ``:doc:`` reference."""
-
-    from docutils import nodes as _nodes
-
     for child in item.children:
-        if isinstance(child, _nodes.reference):
+        if isinstance(child, nodes.reference):
             return child.astext()
     return ""
 
 
 def accessible_name(item: SliceItem, slice_node: Slice, domain: Domain) -> str:
     """Return the accessible name of a marked item."""
-
     parts: list[str] = [visible_text(item)]
     if item.get("mark_slice"):
         parts.append(slice_node["name"])
@@ -54,9 +51,8 @@ def accessible_name(item: SliceItem, slice_node: Slice, domain: Domain) -> str:
     return " ".join(parts)
 
 
-def check_ambiguity(doctree) -> None:
+def check_ambiguity(doctree: nodes.document) -> None:
     """Warn at each occurrence of repeated visible text with identical accessible names."""
-
     # Group items by visible text across the whole page, recording the
     # accessible name and the slice/domain each came from so the
     # same-slice special case can be detected.
@@ -74,39 +70,36 @@ def check_ambiguity(doctree) -> None:
                 occurrences.setdefault(text, []).append((item, slice_node, domain))
 
     for text, group in occurrences.items():
-        if len(group) < 2:
-            continue
-
-        # Same-slice special case: any two items in the same slice
-        # instance with the same visible text always warn.
-        for i, (item_i, slice_i, _dom_i) in enumerate(group):
-            for j, (item_j, slice_j, _dom_j) in enumerate(group):
-                if j <= i:
-                    continue
-                if slice_i is slice_j:
-                    _logger.warning(
-                        "ambiguous link text %r: repeated within slice %r",
-                        text,
-                        slice_i["name"],
-                    )
-                    continue
-                # Cross-slice: warn unless accessible names differ.
-                name_i = accessible_name(item_i, slice_i, _dom_i)
-                name_j = accessible_name(item_j, slice_j, _dom_j)
-                if name_i == name_j:
-                    _logger.warning(
-                        "ambiguous link text %r: identical accessible "
-                        "name %r across slices %r and %r",
-                        text,
-                        name_i,
-                        slice_i["name"],
-                        slice_j["name"],
-                    )
+        if len(group) > 1:
+            # Same-slice special case: any two items in the same slice
+            # instance with the same visible text always warn.
+            for i, (item_i, slice_i, _dom_i) in enumerate(group):
+                for j, (item_j, slice_j, _dom_j) in enumerate(group):
+                    if j <= i:
+                        continue
+                    if slice_i is slice_j:
+                        _logger.warning(
+                            "ambiguous link text %r: repeated within slice %r",
+                            text,
+                            slice_i["name"],
+                        )
+                        continue
+                    # Cross-slice: warn unless accessible names differ.
+                    name_i = accessible_name(item_i, slice_i, _dom_i)
+                    name_j = accessible_name(item_j, slice_j, _dom_j)
+                    if name_i == name_j:
+                        _logger.warning(
+                            "ambiguous link text %r: identical accessible "
+                            "name %r across slices %r and %r",
+                            text,
+                            name_i,
+                            slice_i["name"],
+                            slice_j["name"],
+                        )
 
 
 def unique_id(base: str, used: set[str]) -> str:
     """Return ``base`` if unused, else ``base-2``, ``base-3``, ... on clash."""
-
     candidate = base
     counter = 2
     while candidate in used:
@@ -116,7 +109,7 @@ def unique_id(base: str, used: set[str]) -> str:
     return candidate
 
 
-def resolve_domains(_app, doctree, _docname) -> None:
+def resolve_domains(_app: Sphinx, doctree: nodes.document, _docname: str) -> None:
     """``doctree-resolved`` handler: fill in name/section_id and assign ids."""
     used_ids: set[str] = set()
 
@@ -154,10 +147,7 @@ def resolve_domains(_app, doctree, _docname) -> None:
 
         for slice_node in domain.findall(Slice):
             slice_slug = nodes.make_id(slice_node["name"])
-            if section_slug:
-                base = f"{section_slug}-{slice_slug}"
-            else:
-                base = slice_slug
+            base = f"{section_slug}-{slice_slug}" if section_slug else slice_slug
             slice_node["label_id"] = unique_id(base, used_ids)
 
             for item in slice_node.children:

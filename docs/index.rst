@@ -156,6 +156,7 @@ The view layer
 
     Home <self>
     installation-and-usage
+    developer-set-up
     reference
     developer-reference
     approaches

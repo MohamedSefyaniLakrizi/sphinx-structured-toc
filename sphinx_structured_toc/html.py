@@ -1,34 +1,15 @@
-"""HTML visitors for sphinx-structured-toc nodes (Phase 8).
-
-Renders the annotated doctree as semantic HTML:
-
-* ``Domain`` becomes ``<nav aria-labelledby="...">`` referencing either the
-  enclosing section's heading id (when the domain name is derived from a
-  section heading) or a visually-hidden ``<span id="..." class="domain-
-  aria-target">`` holding the name (when the domain name is overridden).
-  The nameless case (no argument and no enclosing section) is a fatal
-  build error, raised in ``transforms.py`` before rendering.
-* ``Slice`` becomes a ``<li>`` containing the slice label ``<span>`` plus
-  ``": "`` and a nested ``<ul>`` of items.
-* ``SliceItem`` becomes a ``<li>`` containing the resolved ``<a>``.
-
-For items marked ``slice`` and/or ``domain``, the ``<a>`` element
-receives ``id`` and ``aria-labelledby``. The ``<a>`` is emitted by
-Sphinx's own ``visit_reference``; this extension overrides that visitor
-(globally, via ``app.add_node(..., override=True)``) so that when the
-reference's parent is a ``SliceItem`` with the relevant flags set, the
-aria/id attributes are injected. All other references fall through to
-Sphinx's default behaviour.
-"""
-
 from __future__ import annotations
 
-from typing import Any
+from collections.abc import Callable
 
 from docutils import nodes
+from sphinx.application import Sphinx
+from sphinx.writers.html5 import HTML5Translator
+
+from .nodes import Domain, Slice, SliceItem
 
 
-def visit_domain(translator: Any, node: Any) -> None:
+def visit_domain(translator: HTML5Translator, node: Domain) -> None:
     """Open the outer container for a Domain.
 
     Emits ``<nav aria-labelledby="{section_id}">`` when the domain name
@@ -48,14 +29,12 @@ def visit_domain(translator: Any, node: Any) -> None:
         # inside, which is the single source of truth for the name and
         # is also referenced by aria-labelledby on marked items.
         span_id = node.get("domain_span_id", "")
-        translator.body.append(
-            f'<nav class="domain-list" aria-labelledby="{span_id}">'
-        )
+        translator.body.append(f'<nav class="domain-list" aria-labelledby="{span_id}">')
         # "domain-aria-target" visually hides the span while keeping it
         # in the accessibility tree (styles in domain-list.css).
         translator.body.append(
             f'<span id="{span_id}" class="domain-aria-target">'
-            f'{translator.attval(name)}</span>'
+            f"{translator.attval(name)}</span>"
         )
     else:
         translator.body.append(
@@ -66,13 +45,13 @@ def visit_domain(translator: Any, node: Any) -> None:
     translator.body.append("<ul>")
 
 
-def depart_domain(translator: Any, node: Any) -> None:
+def depart_domain(translator: HTML5Translator, _node: Domain) -> None:
     """Close the outer container for a Domain."""
     translator.body.append("</ul>")
     translator.body.append("</nav>")
 
 
-def visit_slice(translator: Any, node: Any) -> None:
+def visit_slice(translator: HTML5Translator, node: Slice) -> None:
     """Open a slice as a <li> containing the label <span> and a nested <ul>.
 
     The colon and trailing space sit in the parent <li>, after the
@@ -88,12 +67,12 @@ def visit_slice(translator: Any, node: Any) -> None:
     translator.body.append("<ul>")
 
 
-def depart_slice(translator: Any, node: Any) -> None:
+def depart_slice(translator: HTML5Translator, _node: Slice) -> None:
     """Close a slice's nested <ul> and the slice <li>."""
     translator.body.append("</ul></li>")
 
 
-def visit_slice_item(translator: Any, node: Any) -> None:
+def visit_slice_item(translator: HTML5Translator, _node: SliceItem) -> None:
     """Open a slice item as a <li>.
 
     The ``<a>`` itself is emitted by Sphinx's ``visit_reference`` (which
@@ -103,12 +82,17 @@ def visit_slice_item(translator: Any, node: Any) -> None:
     translator.body.append("<li>")
 
 
-def depart_slice_item(translator: Any, node: Any) -> None:
+def depart_slice_item(translator: HTML5Translator, _node: SliceItem) -> None:
     """Close a slice item's <li>."""
     translator.body.append("</li>")
 
 
-def make_reference_visitor(app: Any) -> tuple[Any, Any]:
+def make_reference_visitor(
+    _app: Sphinx,
+) -> tuple[
+    Callable[[HTML5Translator, nodes.reference], None],
+    Callable[[HTML5Translator, nodes.reference], None],
+]:
     """Build ``visit``/``depart`` overrides for ``docutils.nodes.reference``.
 
     Returns ``(visit_reference, depart_reference)``. The visit function
@@ -121,14 +105,10 @@ def make_reference_visitor(app: Any) -> tuple[Any, Any]:
     The override is registered globally via
     ``app.add_node(docutils.nodes.reference, html=(...), override=True)``.
     """
-    from sphinx.writers.html5 import HTML5Translator
-
-    from .nodes import SliceItem
-
     original_visit = HTML5Translator.visit_reference
     original_depart = getattr(HTML5Translator, "depart_reference", None)
 
-    def visit_reference(self: Any, node: nodes.reference) -> None:
+    def visit_reference(self: HTML5Translator, node: nodes.reference) -> None:
         parent = node.parent
         if isinstance(parent, SliceItem) and (
             parent.get("mark_slice") or parent.get("mark_domain")
@@ -164,7 +144,7 @@ def make_reference_visitor(app: Any) -> tuple[Any, Any]:
 
         original_visit(self, node)
 
-    def depart_reference(self: Any, node: nodes.reference) -> None:
+    def depart_reference(self: HTML5Translator, node: nodes.reference) -> None:
         if original_depart is not None:
             original_depart(self, node)
 

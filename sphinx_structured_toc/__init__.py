@@ -1,5 +1,8 @@
+"""A Sphinx extension for rendering compact, semantic, accessible documentation link lists grouped by domain."""
+
 from pathlib import Path
 
+from docutils import nodes as docutils_nodes
 from sphinx.application import Sphinx
 from sphinx.util.typing import ExtensionMetadata
 
@@ -8,9 +11,18 @@ from .html import (
     depart_domain,
     depart_slice,
     depart_slice_item,
+    make_reference_visitor,
     visit_domain,
     visit_slice,
     visit_slice_item,
+)
+from .latex import (
+    depart_domain as latex_depart_domain,
+    depart_slice as latex_depart_slice,
+    depart_slice_item as latex_depart_slice_item,
+    visit_domain as latex_visit_domain,
+    visit_slice as latex_visit_slice,
+    visit_slice_item as latex_visit_slice_item,
 )
 from .nodes import Domain, Slice, SliceItem
 from .transforms import resolve_domains
@@ -29,12 +41,25 @@ except ImportError:  # pragma: no cover
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
+    """Register the extension's nodes, directives, transforms and static assets."""
     # register various components
 
     # nodes
-    app.add_node(Domain, html=(visit_domain, depart_domain))
-    app.add_node(Slice, html=(visit_slice, depart_slice))
-    app.add_node(SliceItem, html=(visit_slice_item, depart_slice_item))
+    app.add_node(
+        Domain,
+        html=(visit_domain, depart_domain),
+        latex=(latex_visit_domain, latex_depart_domain),
+    )
+    app.add_node(
+        Slice,
+        html=(visit_slice, depart_slice),
+        latex=(latex_visit_slice, latex_depart_slice),
+    )
+    app.add_node(
+        SliceItem,
+        html=(visit_slice_item, depart_slice_item),
+        latex=(latex_visit_slice_item, latex_depart_slice_item),
+    )
 
     # directives
     app.add_directive("domain", DomainDirective)
@@ -60,18 +85,12 @@ def setup(app: Sphinx) -> ExtensionMetadata:
 
 def add_static_dir(app: Sphinx) -> None:
     """Add the extension package directory to ``html_static_path``."""
-
     if _CSS_DIR not in app.config.html_static_path:
         app.config.html_static_path.append(_CSS_DIR)
 
 
 def install_reference_override(app: Sphinx) -> None:
     """Override ``docutils.nodes.reference`` HTML visitors."""
-
-    from docutils import nodes as docutils_nodes
-
-    from .html import make_reference_visitor
-
     visit, depart = make_reference_visitor(app)
     app.add_node(
         docutils_nodes.reference,
